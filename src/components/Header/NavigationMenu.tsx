@@ -20,6 +20,11 @@ type NavigationMenuProps = Omit<DrawerProps, 'children'>;
 export function NavigationMenu(props: NavigationMenuProps) {
   const { logout, isAuthenticated } = useAuth();
 
+  function handleLogout() {
+    logout();
+    props.onClose();
+  }
+
   return (
     <Drawer {...props} placement="left">
       <DrawerOverlay>
@@ -41,7 +46,7 @@ export function NavigationMenu(props: NavigationMenuProps) {
               </Link>
 
               {isAuthenticated && (
-                <Button colorScheme="red" onClick={logout}>
+                <Button colorScheme="red" onClick={handleLogout}>
                   Sair
                 </Button>
               )}

@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
 export function Login() {
-  const { handleLogin, isAuthenticated } = useAuth();
+  const { handleLogin, isAuthenticated, isLoading } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -28,6 +28,7 @@ export function Login() {
             onClick={() => handleLogin('google')}
             w="full"
             colorScheme="gray"
+            isLoading={isLoading}
             leftIcon={<Icon as={FcGoogle} />}
           >
             Google

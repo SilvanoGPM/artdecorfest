@@ -1,4 +1,5 @@
-import { createContext, useCallback, useContext, useEffect } from 'react';
+import { createContext, useCallback, useContext } from 'react';
+import { useBoolean, useToast } from '@chakra-ui/react';
 
 import { auth, login } from '../services/firebase/firebase';
 import { useStorage } from '../hooks/useStorage';
@@ -16,6 +17,7 @@ type LoginType = 'google';
 export interface AuthContextProps {
   user: User | null;
   isAuthenticated: boolean;
+  isLoading: boolean;
   handleLogin: (type: LoginType) => Promise<void>;
   logout: () => void;
 }
@@ -30,29 +32,40 @@ export const AuthContext = createContext<AuthContextProps>(
 
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [user, setUser] = useStorage<User | null>('@ART_DECOR_FEST/USER', null);
+  const [isLoading, setIsLoading] = useBoolean(false);
+  const toast = useToast();
 
   const isAuthenticated = Boolean(user?.id);
 
-  const handleLogin = useCallback(async (type: LoginType) => {
-    try {
-      const userToCreate = await login(type);
+  const handleLogin = useCallback(
+    async (type: LoginType) => {
+      try {
+        setIsLoading.on();
 
-      const user = await newUser(userToCreate);
+        const userToCreate = await login(type);
 
-      console.log({ user });
+        const user = await newUser(userToCreate);
 
-      setUser(user);
-    } catch {
-      console.log('Não foi possível fazer login');
-    }
-  }, [setUser]);
+        setUser(user);
+      } catch {
+        toast({ title: 'Não foi possível realizar o login', status: 'error' });
+      } finally {
+        setIsLoading.off();
+      }
+    },
+    [setUser]
+  );
 
   const logout = useCallback(() => {
+    auth.updateCurrentUser(null);
+
     setUser(null);
   }, [setUser]);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, handleLogin, logout }}>
+    <AuthContext.Provider
+      value={{ user, isAuthenticated, isLoading, handleLogin, logout }}
+    >
       {children}
     </AuthContext.Provider>
   );
