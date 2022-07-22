@@ -1,5 +1,6 @@
 import {
   Box,
+  Button,
   Drawer,
   DrawerBody,
   DrawerCloseButton,
@@ -9,11 +10,14 @@ import {
   DrawerProps,
   Flex,
   Text,
+  useDisclosure,
 } from '@chakra-ui/react';
 
 import { format } from 'date-fns';
+import { useAuth } from '../../contexts/AuthContext';
 
 import { isSameDate } from '../../utils/isSameDate';
+import { CreateEventModal } from './CreateEventModal';
 
 import { EventsCounter } from './EventsCounter';
 import { EventsList } from './EventsList';
@@ -36,11 +40,16 @@ export function EventsDrawer({
   selectedDate,
   ...props
 }: EventsDrawerProps) {
+  const date = selectedDate || new Date();
+  const { isAuthenticated, isAdmin } = useAuth();
+
+  const modalDisclosure = useDisclosure();
+
   const selectedEvents = events.filter((event) =>
-    isSameDate(event?.date, selectedDate || new Date())
+    isSameDate(event.date, date)
   );
 
-  const formattedDate = format(selectedDate || new Date(), 'dd/MM');
+  const formattedDate = format(date, 'dd/MM');
 
   return (
     <Drawer {...props}>
@@ -61,6 +70,20 @@ export function EventsDrawer({
             </Flex>
 
             <EventsList events={selectedEvents} />
+
+            {isAuthenticated && !isAdmin && (
+              <>
+                <Button mt="4" w="full" onClick={modalDisclosure.onOpen}>
+                  Iniciar um Evento
+                </Button>
+
+                <CreateEventModal
+                  events={selectedEvents}
+                  date={date}
+                  {...modalDisclosure}
+                />
+              </>
+            )}
           </DrawerBody>
         </DrawerContent>
       </DrawerOverlay>

@@ -1,5 +1,6 @@
 import { User as FirebaseUser } from 'firebase/auth';
-import { doc, setDoc } from 'firebase/firestore';
+import { collection, doc, setDoc } from 'firebase/firestore';
+import { getAny } from './core';
 
 import { createCollection } from './firebase';
 
@@ -8,6 +9,7 @@ export interface User {
   displayName: string | null;
   email: string | null;
   photoURL: string | null;
+  admin: boolean;
 }
 
 export const usersCollection = createCollection<User>('users');
@@ -25,5 +27,17 @@ export async function newUser(userToCreate: FirebaseUser) {
 
   await setDoc(doc(usersCollection, uid), user);
 
-  return user;
+  const { admin, ...rest } = user;
+
+  return rest;
+}
+
+export async function getUser(id: string) {
+  return getAny<User>(usersCollection, id);
+}
+
+export async function verifyIfUserIsAdmin(id: string) {
+  const user = await getUser(id);
+
+  return user.admin;
 }

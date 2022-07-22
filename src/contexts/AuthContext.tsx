@@ -1,9 +1,15 @@
-import { createContext, useCallback, useContext } from 'react';
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
 import { useBoolean, useToast } from '@chakra-ui/react';
 
 import { auth, login } from '../services/firebase/firebase';
 import { useStorage } from '../hooks/useStorage';
-import { newUser } from '../services/firebase/users';
+import { newUser, verifyIfUserIsAdmin } from '../services/firebase/users';
 
 export interface User {
   id: string;
@@ -17,6 +23,7 @@ type LoginType = 'google';
 export interface AuthContextProps {
   user: User | null;
   isAuthenticated: boolean;
+  isAdmin: boolean;
   isLoading: boolean;
   handleLogin: (type: LoginType) => Promise<void>;
   logout: () => void;
@@ -32,10 +39,23 @@ export const AuthContext = createContext<AuthContextProps>(
 
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [user, setUser] = useStorage<User | null>('@ART_DECOR_FEST/USER', null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [isLoading, setIsLoading] = useBoolean(false);
   const toast = useToast();
 
   const isAuthenticated = Boolean(user?.id);
+
+  useEffect(() => {
+    async function loadIsAdmin() {
+      const isAdmin = await verifyIfUserIsAdmin(user?.id!);
+
+      setIsAdmin(isAdmin);
+    }
+
+    if (isAuthenticated) {
+      loadIsAdmin();
+    }
+  }, [isAuthenticated]);
 
   const handleLogin = useCallback(
     async (type: LoginType) => {
@@ -64,7 +84,7 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, isLoading, handleLogin, logout }}
+      value={{ user, isAuthenticated, isLoading, isAdmin, handleLogin, logout }}
     >
       {children}
     </AuthContext.Provider>
