@@ -1,10 +1,11 @@
 import Calendar, { DateCallback } from 'react-calendar';
-import { format, isSameDay, isSameMonth, isSameYear } from 'date-fns';
+import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Box, Center, Icon, Text } from '@chakra-ui/react';
 import { BsPlusLg } from 'react-icons/bs';
 
 import { titleString } from '../../utils/titleString';
+import { isSameDate } from '../../utils/isSameDate';
 
 import './styles.scss';
 
@@ -20,14 +21,6 @@ interface EventsCalendarProps {
 }
 
 const MAX_EVENTS_DISPLAY = 3;
-
-function isSameDate(leftDate: Date, rightDate: Date) {
-  return (
-    isSameDay(leftDate, rightDate) &&
-    isSameMonth(leftDate, rightDate) &&
-    isSameYear(leftDate, rightDate)
-  );
-}
 
 export function EventsCalendar({ events, onClickDay }: EventsCalendarProps) {
   function formatShortWeekday(_: string, date: Date) {
