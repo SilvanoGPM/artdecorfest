@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore';
 
 export function toValue<T>(doc: QueryDocumentSnapshot<T>): T {
-  return { ...doc.data(), id: doc.id } as T;
+  return { ...doc.data(), id: (doc.data() as any).id || doc.id } as T;
 }
 
 export function mapValue<T>(data: QuerySnapshot<T>): T[] {

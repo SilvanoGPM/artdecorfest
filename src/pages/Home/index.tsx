@@ -6,6 +6,7 @@ import { EventsCalendar } from '../../components/EventsCalendar';
 import { Header } from '../../components/Header';
 import { streamEvents } from '../../services/firebase/events';
 import { DefaultLayout } from '../../components/DefaultLayout';
+import { useAuth } from '../../contexts/AuthContext';
 
 export interface Event {
   id: string;
@@ -28,6 +29,10 @@ export interface Event {
 
 export function Home() {
   const eventDrawerDisclosure = useDisclosure();
+
+  const { isAuthenticated } = useAuth();
+
+  console.log({ isAuthenticated });
 
   const [events, setEvents] = useState<Event[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
