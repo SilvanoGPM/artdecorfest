@@ -8,7 +8,7 @@ import { App } from './App';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
+    <ChakraProvider theme={theme} portalZIndex={40}>
       <AuthProvider>
         <App />
       </AuthProvider>

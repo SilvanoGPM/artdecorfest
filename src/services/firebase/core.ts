@@ -9,6 +9,7 @@ import {
   DocumentSnapshot,
   QuerySnapshot,
   QueryDocumentSnapshot,
+  deleteDoc,
 } from 'firebase/firestore';
 
 export function toValue<T>(doc: QueryDocumentSnapshot<T>): T {
@@ -53,4 +54,11 @@ export async function streamAny<T>(
   const unsubscribe = onSnapshot(doc(collection, id), callback);
 
   return unsubscribe;
+}
+
+export async function removeAny<T>(
+  collection: CollectionReference<T>,
+  id: string
+) {
+  return deleteDoc(doc(collection, id));
 }
