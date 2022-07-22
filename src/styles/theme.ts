@@ -1,4 +1,5 @@
 import { extendTheme } from '@chakra-ui/react';
+import '@fontsource/roboto';
 
 export const theme = extendTheme({
   components: {
@@ -7,5 +8,9 @@ export const theme = extendTheme({
         colorScheme: 'orange',
       },
     }
+  },
+  fonts: {
+    heading: 'Roboto, sans-serif',
+    body: 'Roboto, sans-serif',
   },
 });

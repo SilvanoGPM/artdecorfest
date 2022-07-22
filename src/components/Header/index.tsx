@@ -8,6 +8,8 @@ import {
 } from '@chakra-ui/react';
 
 import { BiLogIn, BiMenu } from 'react-icons/bi';
+import { NavLink } from 'react-router-dom';
+
 import { NavigationMenu } from './NavigationMenu';
 
 export function Header() {
@@ -32,7 +34,9 @@ export function Header() {
           />
         </Box>
 
-        <Button leftIcon={<Icon as={BiLogIn} />}>Entrar</Button>
+        <NavLink to="/login">
+          <Button leftIcon={<Icon as={BiLogIn} />}>Entrar</Button>
+        </NavLink>
       </Flex>
 
       <NavigationMenu {...disclosure} />

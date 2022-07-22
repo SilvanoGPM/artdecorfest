@@ -54,7 +54,7 @@ export function Home() {
     <DefaultLayout>
       <Center mt="8" flexDirection="column">
         <Heading as="h2" mb="8">
-          Calendário de eventos
+          Calendário de Eventos
         </Heading>
 
         <EventsCalendar onClickDay={handleCalendarDayClick} events={events} />
