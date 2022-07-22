@@ -20,6 +20,7 @@ export async function newUser(userToCreate: FirebaseUser) {
     displayName,
     email,
     photoURL,
+    admin: false,
   };
 
   await setDoc(doc(usersCollection, uid), user);

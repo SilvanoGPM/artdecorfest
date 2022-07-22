@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect } from 'react';
 
-import { login } from '../services/firebase/firebase';
+import { auth, login } from '../services/firebase/firebase';
 import { useStorage } from '../hooks/useStorage';
 import { newUser } from '../services/firebase/users';
 
@@ -35,9 +35,11 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
   const handleLogin = useCallback(async (type: LoginType) => {
     try {
-      const { user: userToCreate } = await login(type);
+      const userToCreate = await login(type);
 
       const user = await newUser(userToCreate);
+
+      console.log({ user });
 
       setUser(user);
     } catch {

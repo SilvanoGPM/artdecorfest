@@ -1,6 +1,6 @@
-import { onSnapshot, QuerySnapshot } from 'firebase/firestore';
+import { FieldValue, onSnapshot, QuerySnapshot } from 'firebase/firestore';
 
-import { getAll, mapValue, streamAny } from './core';
+import { createAny, getAll, mapValue, streamAny } from './core';
 import { createCollection } from './firebase';
 
 export interface Event {
@@ -11,16 +11,23 @@ export interface Event {
   end: string;
 }
 
+export interface EventToCreate extends Omit<Event, 'id' | 'date'> {
+  date: FieldValue;
+}
+
 export const eventsCollection = createCollection<Event>('events');
+export const eventsCreateCollection = createCollection<EventToCreate>('events');
 
 export function getAllEvents() {
   return getAll<Event>(eventsCollection);
 }
 
-export function streamEvents(
-  callback: (events: Event[]) => void
-) {
+export function streamEvents(callback: (events: Event[]) => void) {
   return onSnapshot(eventsCollection, (snapshot) => {
     callback(mapValue<Event>(snapshot));
   });
+}
+
+export function createEvent(event: EventToCreate) {
+  return createAny(eventsCreateCollection, event);
 }

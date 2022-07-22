@@ -1,11 +1,6 @@
 import { initializeApp } from 'firebase/app';
 
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  UserCredential,
-} from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup } from 'firebase/auth';
 
 import {
   collection,
@@ -39,9 +34,13 @@ export function createCollection<T = DocumentData>(
 }
 
 const authProviders = {
-  'google': googleAuthProvider,
+  google: googleAuthProvider,
 };
 
-export async function login(type: 'google'): Promise<UserCredential> {
-  return signInWithPopup(auth, authProviders[type]);
+export async function login(type: 'google') {
+  const { user } = await signInWithPopup(auth, authProviders[type]);
+
+  auth.updateCurrentUser(user);
+
+  return user;
 }
