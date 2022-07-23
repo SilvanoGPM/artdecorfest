@@ -42,7 +42,7 @@ export function CreateEventForm({
   const handleCreateEvent = handleSubmit(async (data) => {
     try {
       if (!info?.phone) {
-        await addUserPhone(info?.id!, data.phone.replaceAll(' ', ''));
+        await addUserPhone(info?.id!, data.phone.replaceAll(/\D+/g, ''));
       }
 
       await createPreEvent(user?.id || '', {

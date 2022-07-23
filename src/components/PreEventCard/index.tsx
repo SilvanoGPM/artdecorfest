@@ -47,7 +47,7 @@ export function PreEventCard({
 
     const message = `Olá, ${firstName}. Eu faço parte da equipe ArtDecorFest. Vamos negociar sobre sua festa(${title}) no dia ${formattedDate}, das ${start} às ${end}.`;
 
-    window.open(`${url}${phone.replaceAll(' ', '').trim()}?text=${message}`);
+    window.open(`${url}${phone.replaceAll(/\D+/g, '').trim()}?text=${message}`);
   }
 
   return (
