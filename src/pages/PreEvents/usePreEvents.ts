@@ -1,23 +1,12 @@
 import { useBoolean } from '@chakra-ui/react';
 import { format } from 'date-fns';
-import { DocumentReference } from 'firebase/firestore';
 import { useEffect, useState } from 'react';
 import { ptBR } from 'date-fns/locale';
 
 import { useAuth } from '../../contexts/AuthContext';
 import { streamPrevEvents } from '../../services/firebase/preEvents';
-import { getUser, User } from '../../services/firebase/users';
-
-interface PreEvent {
-  id: string;
-  userRef: DocumentReference<User>;
-  user: User;
-  title: string;
-  start: string;
-  end: string;
-  date: Date;
-  formattedDate: string;
-}
+import { getUser } from '../../services/firebase/users';
+import { PreEvent } from '.';
 
 export function usePreEvents(): [PreEvent[], boolean] {
   const [preEvents, setPreEvents] = useState<PreEvent[]>([]);

@@ -12,16 +12,19 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
+
 import { useAuth } from '../../contexts/AuthContext';
 
 type NavigationMenuProps = Omit<DrawerProps, 'children'>;
 
 export function NavigationMenu(props: NavigationMenuProps) {
-  const { logout, isAuthenticated } = useAuth();
+  const { logout, isAuthenticated, isAdmin } = useAuth();
+  const navigate = useNavigate();
 
   function handleLogout() {
     logout();
+    navigate('/')
     props.onClose();
   }
 
@@ -38,12 +41,15 @@ export function NavigationMenu(props: NavigationMenuProps) {
 
           <DrawerBody>
             <VStack spacing="4" align="start">
-              <Link as={NavLink} to="/meus-eventos">
-                Meus eventos
+              <Link as={NavLink} to="/">
+                Calendário
               </Link>
-              <Link as={NavLink} to="/gerenciar-eventos">
-                Gerenciar eventos
-              </Link>
+
+              {isAdmin && (
+                <Link as={NavLink} to="/gerenciar-eventos">
+                  Gerenciar eventos
+                </Link>
+              )}
 
               {isAuthenticated && (
                 <Button colorScheme="red" onClick={handleLogout}>

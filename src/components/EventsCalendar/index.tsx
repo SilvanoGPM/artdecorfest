@@ -3,7 +3,6 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Box, Center, Icon, Text } from '@chakra-ui/react';
 import { BsPlusLg } from 'react-icons/bs';
-import { startOfMonth } from 'date-fns';
 
 import { titleString } from '../../utils/titleString';
 import { isSameDate } from '../../utils/isSameDate';
@@ -64,7 +63,7 @@ export function EventsCalendar({ events, onClickDay }: EventsCalendarProps) {
 
   return (
     <Calendar
-      minDate={isAdmin ? undefined : startOfMonth(new Date())}
+      minDate={isAdmin ? undefined : new Date()}
       navigationLabel={navigationLabel}
       showNeighboringMonth={false}
       formatShortWeekday={formatShortWeekday}

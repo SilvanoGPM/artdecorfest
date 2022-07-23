@@ -39,10 +39,9 @@ export function CreateEventForm({
 
   const handleCreateEvent = handleSubmit(async (data) => {
     try {
-      await createPreEvent({
+      await createPreEvent(user?.id || '', {
         ...data,
         date: Timestamp.fromDate(date),
-        userId: user?.id || '',
       });
 
       toast({

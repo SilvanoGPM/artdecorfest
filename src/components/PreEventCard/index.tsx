@@ -9,15 +9,11 @@ import {
 } from '@chakra-ui/react';
 
 import { BsWhatsapp } from 'react-icons/bs';
-
-import {
-  AiOutlineCheckCircle,
-  AiOutlineCloseCircle,
-  AiOutlineBell,
-  AiOutlineClockCircle,
-} from 'react-icons/ai';
+import { AiOutlineBell, AiOutlineClockCircle } from 'react-icons/ai';
 
 import { MdDateRange } from 'react-icons/md';
+import { AcceptEventPopover } from './AcceptEventPopover';
+import { DenyEventPopover } from './DenyEventPopover';
 
 interface PreEventCardProps {
   user: { displayName?: string | null; photoURL?: string | null };
@@ -25,6 +21,8 @@ interface PreEventCardProps {
   formattedDate: string;
   start: string;
   end: string;
+  onAcceptEvent: () => void;
+  onDenyEvent: () => void;
 }
 
 export function PreEventCard({
@@ -32,7 +30,9 @@ export function PreEventCard({
   title,
   formattedDate,
   start,
-  end
+  end,
+  onAcceptEvent,
+  onDenyEvent,
 }: PreEventCardProps) {
   return (
     <Flex
@@ -40,7 +40,8 @@ export function PreEventCard({
       bg="orange.100"
       rounded="xl"
       maxW="500px"
-      w="500px"
+      w="full"
+      flex="1"
     >
       <Flex
         align="center"
@@ -49,7 +50,11 @@ export function PreEventCard({
         borderBottomColor="orange.300"
         p="4"
       >
-        <Avatar name={String(user.displayName)} src={String(user.photoURL)} mr="4" />
+        <Avatar
+          name={String(user.displayName)}
+          src={String(user.photoURL)}
+          mr="4"
+        />
         <Text color="orange.900">{user.displayName}</Text>
       </Flex>
 
@@ -105,29 +110,9 @@ export function PreEventCard({
           />
         </Tooltip>
 
-        <Tooltip label="Negar evento">
-          <IconButton
-            aria-label="Negar evento"
-            variant="unstyled"
-            icon={
-              <Icon as={AiOutlineCloseCircle} color="red.300" fontSize="3xl" />
-            }
-          />
-        </Tooltip>
+        <DenyEventPopover onDenyEvent={onDenyEvent} />
 
-        <Tooltip label="Aceitar evento">
-          <IconButton
-            aria-label="Aceitar evento"
-            variant="unstyled"
-            icon={
-              <Icon
-                as={AiOutlineCheckCircle}
-                color="green.500"
-                fontSize="3xl"
-              />
-            }
-          />
-        </Tooltip>
+        <AcceptEventPopover onAcceptEvent={onAcceptEvent} />
       </Flex>
     </Flex>
   );
