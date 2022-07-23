@@ -3,8 +3,8 @@ import {
   Heading,
   Spinner,
   useDisclosure,
-  useToast,
 } from '@chakra-ui/react';
+
 import { useState } from 'react';
 
 import { EventsDrawer } from '../../components/EventsDrawer';

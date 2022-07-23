@@ -3,9 +3,11 @@ import { format } from 'date-fns';
 import { ptBR } from 'date-fns/locale';
 import { Box, Center, Icon, Text } from '@chakra-ui/react';
 import { BsPlusLg } from 'react-icons/bs';
+import { startOfMonth } from 'date-fns';
 
 import { titleString } from '../../utils/titleString';
 import { isSameDate } from '../../utils/isSameDate';
+import { useAuth } from '../../contexts/AuthContext';
 
 import './styles.scss';
 
@@ -23,6 +25,8 @@ interface EventsCalendarProps {
 const MAX_EVENTS_DISPLAY = 3;
 
 export function EventsCalendar({ events, onClickDay }: EventsCalendarProps) {
+  const { isAdmin } = useAuth();
+
   function formatShortWeekday(_: string, date: Date) {
     return format(date, 'EEEE', { locale: ptBR })[0];
   }
@@ -60,6 +64,7 @@ export function EventsCalendar({ events, onClickDay }: EventsCalendarProps) {
 
   return (
     <Calendar
+      minDate={isAdmin ? undefined : startOfMonth(new Date())}
       navigationLabel={navigationLabel}
       showNeighboringMonth={false}
       formatShortWeekday={formatShortWeekday}

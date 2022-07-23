@@ -41,6 +41,7 @@ export function EventsDrawer({
   ...props
 }: EventsDrawerProps) {
   const date = selectedDate || new Date();
+
   const { isAuthenticated, isAdmin } = useAuth();
 
   const modalDisclosure = useDisclosure();

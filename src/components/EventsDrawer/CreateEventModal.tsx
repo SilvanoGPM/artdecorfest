@@ -11,7 +11,6 @@ import {
   Text,
   Badge,
   Icon,
-  Center,
 } from '@chakra-ui/react';
 
 import { format } from 'date-fns';
