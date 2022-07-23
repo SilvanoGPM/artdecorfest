@@ -9,19 +9,21 @@ import { useBoolean, useToast } from '@chakra-ui/react';
 
 import { auth, login } from '../services/firebase/firebase';
 import { useStorage } from '../hooks/useStorage';
-import { newUser, verifyIfUserIsAdmin } from '../services/firebase/users';
+import { getUser, newUser } from '../services/firebase/users';
 
 export interface User {
   id: string;
   displayName: string | null;
   email: string | null;
   photoURL: string | null;
+  phone?: string | null;
 }
 
 type LoginType = 'google';
 
 export interface AuthContextProps {
   user: User | null;
+  info: User | null;
   isAuthenticated: boolean;
   isAdmin: boolean;
   isLoading: boolean;
@@ -40,6 +42,7 @@ export const AuthContext = createContext<AuthContextProps>(
 export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
   const [user, setUser] = useStorage<User | null>('@ART_DECOR_FEST/USER', null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [info, setInfo] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useBoolean(false);
   const toast = useToast();
 
@@ -47,9 +50,10 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
   useEffect(() => {
     async function loadIsAdmin() {
-      const isAdmin = await verifyIfUserIsAdmin(user?.id!);
+      const info = await getUser(user?.id!);
 
-      setIsAdmin(isAdmin);
+      setInfo(info);
+      setIsAdmin(info.admin);
     }
 
     if (isAuthenticated) {
@@ -84,7 +88,15 @@ export function AuthProvider({ children }: AuthProviderProps): JSX.Element {
 
   return (
     <AuthContext.Provider
-      value={{ user, isAuthenticated, isLoading, isAdmin, handleLogin, logout }}
+      value={{
+        user,
+        info,
+        isAuthenticated,
+        isLoading,
+        isAdmin,
+        handleLogin,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

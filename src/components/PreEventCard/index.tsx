@@ -18,6 +18,7 @@ import { DenyEventPopover } from './DenyEventPopover';
 interface PreEventCardProps {
   user: { displayName?: string | null; photoURL?: string | null };
   title: string;
+  phone?: string | null;
   formattedDate: string;
   start: string;
   end: string;
@@ -31,9 +32,24 @@ export function PreEventCard({
   formattedDate,
   start,
   end,
+  phone,
   onAcceptEvent,
   onDenyEvent,
 }: PreEventCardProps) {
+  function handleSendMessage() {
+    if (!phone) {
+      return;
+    }
+
+    const url = 'https://wa.me/';
+
+    const firstName = user.displayName?.split(' ')[0] || 'Sr(a)';
+
+    const message = `Olá, ${firstName}. Eu faço parte da equipe ArtDecorFest. Vamos negociar sobre sua festa(${title}) no dia ${formattedDate}, das ${start} às ${end}.`;
+
+    window.open(`${url}${phone.replaceAll(' ', '').trim()}?text=${message}`);
+  }
+
   return (
     <Flex
       direction="column"
@@ -105,6 +121,7 @@ export function PreEventCard({
         <Tooltip label="Enviar mensagem">
           <IconButton
             aria-label="Enviar mensagem"
+            onClick={handleSendMessage}
             variant="unstyled"
             icon={<Icon as={BsWhatsapp} color="whatsapp.500" fontSize="3xl" />}
           />

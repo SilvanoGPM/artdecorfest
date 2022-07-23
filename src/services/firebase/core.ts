@@ -10,6 +10,7 @@ import {
   QuerySnapshot,
   QueryDocumentSnapshot,
   deleteDoc,
+  setDoc,
 } from 'firebase/firestore';
 
 export function toValue<T>(doc: QueryDocumentSnapshot<T>): T {
@@ -61,4 +62,13 @@ export async function removeAny<T>(
   id: string
 ) {
   return deleteDoc(doc(collection, id));
+}
+
+export async function updateAny<T>(
+  collection: CollectionReference,
+  id: string,
+  data: Partial<{}>
+) {
+  const ref = doc(collection, id);
+  await setDoc(ref, data, { merge: true });
 }

@@ -15,6 +15,7 @@ import { Input } from '../form/Input';
 import { Event } from './CreateEventModal';
 import { createPreEvent } from '../../services/firebase/preEvents';
 import { useAuth } from '../../contexts/AuthContext';
+import { addUserPhone } from '../../services/firebase/users';
 
 interface CreateEventFormProps {
   events: Event[];
@@ -26,6 +27,7 @@ interface CreateEventFormData {
   title: string;
   start: string;
   end: string;
+  phone: string;
 }
 
 export function CreateEventForm({
@@ -33,12 +35,16 @@ export function CreateEventForm({
   date,
   closeModal,
 }: CreateEventFormProps) {
-  const { user } = useAuth();
+  const { user, info } = useAuth();
   const toast = useToast();
   const { register, handleSubmit, formState } = useForm<CreateEventFormData>();
 
   const handleCreateEvent = handleSubmit(async (data) => {
     try {
+      if (!info?.phone) {
+        await addUserPhone(info?.id!, data.phone.replaceAll(' ', ''));
+      }
+
       await createPreEvent(user?.id || '', {
         ...data,
         date: Timestamp.fromDate(date),
@@ -99,6 +105,7 @@ export function CreateEventForm({
       required: 'Insira um título',
       minLength: { value: 3, message: 'Insira pelo menos 3 caracteres' },
     },
+    phone: { required: 'É necessário um número para entrarmos em contato' },
     start: {
       required: 'Insira uma data de início',
       validate: timeValidation(
@@ -140,6 +147,15 @@ export function CreateEventForm({
             flex="1"
           />
         </SimpleGrid>
+
+        {!info?.phone && (
+          <Input
+            {...register('phone', formValidations.phone)}
+            error={formState.errors.phone}
+            label="Número para contato"
+            placeholder="ex: 88 9 88888888"
+          />
+        )}
       </VStack>
 
       <HStack spacing="4" mt="4" justify="flex-end" w="full">
