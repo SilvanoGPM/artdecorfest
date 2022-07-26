@@ -18,6 +18,17 @@ export const usersCollection = createCollection<User>('users');
 export async function newUser(userToCreate: FirebaseUser) {
   const { uid, displayName, email, photoURL } = userToCreate;
 
+  const userExists = await getUser(uid);
+
+  if (userExists) {
+    return {
+      id: uid,
+      displayName,
+      email,
+      photoURL,
+    };
+  }
+
   const user = {
     id: uid,
     displayName,
