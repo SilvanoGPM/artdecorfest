@@ -16,8 +16,8 @@ export function useStorage<T>(
   const [storedValue, setStoredValue] = useState<T>(initialValue);
 
   useEffect(() => {
-    async function loadStoredValue(): Promise<void> {
-      const valueFound = await Repository.get<T>(key);
+    function loadStoredValue(): void {
+      const valueFound = Repository.get<T>(key);
 
       if (valueFound !== undefined && valueFound !== null) {
         setStoredValue(valueFound);
@@ -30,8 +30,8 @@ export function useStorage<T>(
   }, [key]);
 
   useEffect(() => {
-    async function storeValue(): Promise<void> {
-      await Repository.save<T>(key, storedValue);
+    function storeValue(): void {
+      Repository.save<T>(key, storedValue);
     }
 
     if (!loading) {
